@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - Allan Nickson</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <article class="card">
+      <main class="container" aria-labelledby="contact-heading">
+        <header>
+          <h1 id="contact-heading">Contact Us</h1>
+          <nav class="links" aria-label="site links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+          </nav>
+        </header>
+
+        <form id="contact-form" novalidate>
+        <div class="row">
+          <div>
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" data-testid="test-contact-name" aria-describedby="error-name" required />
+            <div id="error-name" class="error" aria-live="polite" data-testid="test-contact-error-name"></div>
+          </div>
+
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" data-testid="test-contact-email" aria-describedby="error-email" required />
+            <div id="error-email" class="error" aria-live="polite" data-testid="test-contact-error-email"></div>
+          </div>
+        </div>
+
+        <div>
+          <label for="subject">Subject</label>
+          <input id="subject" name="subject" type="text" data-testid="test-contact-subject" aria-describedby="error-subject" required />
+          <div id="error-subject" class="error" aria-live="polite" data-testid="test-contact-error-subject"></div>
+        </div>
+
+        <div>
+          <label for="message">Message</label>
+          <textarea id="message" name="message" data-testid="test-contact-message" aria-describedby="error-message" required></textarea>
+          <div id="error-message" class="error" aria-live="polite" data-testid="test-contact-error-message"></div>
+        </div>
+
+        <div>
+          <button type="submit" data-testid="test-contact-submit">Send message</button>
+        </div>
+
+  <div id="form-success" class="success" role="status" aria-live="polite" data-testid="test-contact-success"></div>
+        </form>
+
+        <script>
+        (function(){
+          const form = document.getElementById('contact-form');
+          const nameEl = document.getElementById('name');
+          const emailEl = document.getElementById('email');
+          const subjectEl = document.getElementById('subject');
+          const messageEl = document.getElementById('message');
+
+          const error = (id, text) => {
+            const el = document.getElementById('error-' + id);
+            el.textContent = text || '';
+            const input = document.getElementById(id);
+            if(text){
+              input.setAttribute('aria-invalid', 'true');
+              input.setAttribute('aria-describedby', 'error-' + id);
+            } else {
+              input.removeAttribute('aria-invalid');
+            }
+          };
+
+          const validate = () => {
+            let ok = true;
+            // name
+            if(!nameEl.value.trim()){
+              error('name', 'Full name is required.'); ok = false;
+            } else { error('name', ''); }
+
+            // email
+            const email = emailEl.value.trim();
+            if(!email){ error('email', 'Email is required.'); ok = false; }
+            else if(!/^\S+@\S+\.\S+$/.test(email)){ error('email', 'Enter a valid email address.'); ok = false; }
+            else { error('email', ''); }
+
+            // subject
+            if(!subjectEl.value.trim()){ error('subject', 'Subject is required.'); ok = false; } else { error('subject',''); }
+
+            // message
+            if(!messageEl.value.trim()){ error('message', 'Message is required.'); ok = false; }
+            else if(messageEl.value.trim().length < 10){ error('message', 'Message must be at least 10 characters.'); ok = false; }
+            else { error('message',''); }
+
+            return ok;
+          };
+
+          form.addEventListener('submit', function(ev){
+            ev.preventDefault();
+            const ok = validate();
+            const successEl = document.getElementById('form-success');
+            if(ok){
+              // simulate successful submission
+              successEl.textContent = 'Thanks — your message has been received.';
+              successEl.classList.add('show');
+              // clear fields
+              form.reset();
+            } else {
+              successEl.textContent = '';
+              successEl.classList.remove('show');
+            }
+          });
+
+          // simple keyboard accessibility: focus outlines are visible by default; no JS required
+        })();
+        </script>
+      </main>
+    </article>
+  </body>
+</html>
